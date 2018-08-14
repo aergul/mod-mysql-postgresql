@@ -61,9 +61,12 @@ class Starter extends Verticle {
     val username = config.getString("username", defaultUserFor(dbType))
     val password = Option(config.getString("password")).orElse(defaultPasswordFor(dbType))
     val database = Option(config.getString("database")).orElse(defaultDatabaseFor(dbType))
+    val maxMessageSize = config.getInteger("maximumMessageSize", defaultMaximumMessageSize())
 
-    Configuration(username, host, port, password, database)
+    Configuration(username, host, port, password, database, maximumMessageSize = maxMessageSize)
   }
+
+  private def defaultMaximumMessageSize(): Integer = 16777216 * 4
 
   private def defaultPortFor(connection: String): Integer = connection match {
     case "postgresql" => 5432
